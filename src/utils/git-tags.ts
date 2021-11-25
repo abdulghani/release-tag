@@ -1,7 +1,7 @@
 import ReleaseStage from "@package/constants/release-stage";
 import ReleaseType from "@package/constants/release-type";
 import fs from "fs";
-import jsonc from "jsonc-parser";
+import { parse } from "jsonc-parser";
 import lodash from "lodash";
 import path from "path";
 import yargs from "yargs";
@@ -226,9 +226,7 @@ class GitTags {
     const isExist = fs.existsSync(packagePath);
 
     if (isExist) {
-      const config = jsonc.parse(
-        fs.readFileSync(packagePath, { encoding: "utf-8" })
-      );
+      const config = parse(fs.readFileSync(packagePath, { encoding: "utf-8" }));
       if (config.version) {
         config.version = stripped;
         fs.writeFileSync(packagePath, JSON.stringify(config, null, 2) + "\n", {
