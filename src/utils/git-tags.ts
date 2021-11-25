@@ -1,6 +1,9 @@
 import ReleaseStage from "@package/constants/release-stage";
 import ReleaseType from "@package/constants/release-type";
+import fs from "fs";
+import jsonc from "jsonc-parser";
 import lodash from "lodash";
+import path from "path";
 import yargs from "yargs";
 import executeCommand from "./execute-command";
 import getVersionDetail from "./get-version-detail";
@@ -10,11 +13,13 @@ class GitTags {
   private currentBranch!: string | null;
   private stage: ReleaseStage;
   private type: ReleaseType;
+  private writeToPackage: boolean;
 
   constructor() {
-    const { stage, type } = this.getArguments();
+    const { stage, type, writeToPackage } = this.getArguments();
     this.stage = stage;
     this.type = type;
+    this.writeToPackage = writeToPackage;
   }
 
   private getArguments() {
@@ -47,8 +52,13 @@ class GitTags {
       );
       process.exit(1);
     })();
+    const writeToPackage = (() => {
+      const argval = !!args["write-to-package"];
 
-    return { stage, type };
+      return argval;
+    })();
+
+    return { stage, type, writeToPackage };
   }
 
   private async getCurrentBranch() {
@@ -109,7 +119,6 @@ class GitTags {
   }
 
   private async cleanupRelatedTags(version: string) {
-    console.log("CLEANING UP TAGS");
     const versionDetail = getVersionDetail(version);
     const tags = await this.getRemoteTags();
     const relatedTags = tags.filter((item) => {
@@ -124,6 +133,7 @@ class GitTags {
       );
     });
     if (relatedTags.length > 0) {
+      console.log("CLEANING UP TAGS");
       console.log("DELETING REMOTE TAGS", relatedTags);
       await executeCommand("git", [
         "push",
@@ -201,12 +211,47 @@ class GitTags {
     console.log(`CREATED NEW TAG ${tag}`);
   }
 
+  private async commitFile(path: string, message?: string) {
+    const branch = await this.getCurrentBranch();
+    await executeCommand("git", ["add", path]);
+    const commitArgs = ["commit"];
+    if (message) commitArgs.push("-m", message);
+    await executeCommand("git", commitArgs);
+    await executeCommand("git", ["push", "--no-verify", "origin", branch]);
+  }
+
+  private async writeVersion(tag: string) {
+    const stripped = tag.replace(/^(?:v)?/i, "");
+    const packagePath = path.resolve(process.cwd(), "package.json");
+    const isExist = fs.existsSync(packagePath);
+
+    if (isExist) {
+      const config = jsonc.parse(
+        fs.readFileSync(packagePath, { encoding: "utf-8" })
+      );
+      if (config.version) {
+        config.version = stripped;
+        fs.writeFileSync(packagePath, JSON.stringify(config, null, 2) + "\n", {
+          encoding: "utf-8",
+        });
+        console.log("PUSHING CHANGES TO package.json");
+        await this.commitFile(
+          packagePath,
+          `chore: update package.json version (${tag})`
+        );
+      }
+    }
+  }
+
   public async createRelease() {
     console.log();
     console.log("FETCHING REMOTE TAGS...");
     const newTag = await this.genNewTag();
     if (this.stage === ReleaseStage.release) {
       await this.cleanupRelatedTags(newTag);
+    }
+    if (this.writeToPackage) {
+      await this.writeVersion(newTag);
     }
     await this.createTag(newTag);
     console.log();

@@ -10,7 +10,7 @@
     "build": "[ -d ./build ] && rm -rf ./build; npm run test && ttsc --project ./tsconfig.build.json",
     "test": "jest --config ./jest.config.ts --verbose --runInBand --coverage",
     "test:file": "npm run test -- --watch",
-    "release": "ts-node -r tsconfig-paths/register ./src/cli.ts"
+    "release": "ts-node -r tsconfig-paths/register ./src/cli.ts --write-to-package"
   },
   "keywords": [],
   "author": "",
