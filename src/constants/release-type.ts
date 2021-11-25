@@ -1,7 +1,7 @@
 enum ReleaseType {
   major = "major",
   minor = "minor",
-  bugfix = "bugfix",
+  patch = "patch",
 }
 
 export default ReleaseType;

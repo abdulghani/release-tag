@@ -143,7 +143,7 @@ class GitTags {
     // BUMP VERSION
     const bumpedVersion = (() => {
       const v = getVersionDetail(pureTags[0]);
-      if (this.type === ReleaseType.bugfix) {
+      if (this.type === ReleaseType.patch) {
         v.patch += 1;
       } else if (this.type === ReleaseType.minor) {
         v.minor += 1;

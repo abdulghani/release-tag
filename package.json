@@ -1,7 +1,7 @@
 {
   "name": "@abdulghani/release-tag",
-  "version": "0.0.5",
-  "description": "",
+  "version": "0.0.6",
+  "description": "package to manage release tag for a repository in a cli",
   "bin": {
     "release-tag": "./build/cli.js"
   },
