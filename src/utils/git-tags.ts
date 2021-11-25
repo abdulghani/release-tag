@@ -213,8 +213,9 @@ class GitTags {
 
   private async commitFile(path: string, message?: string) {
     const branch = await this.getCurrentBranch();
+    await executeCommand("git", ["reset", "HEAD", "--", "."]);
     await executeCommand("git", ["add", path]);
-    const commitArgs = ["commit"];
+    const commitArgs = ["commit", "--no-verify"];
     if (message) commitArgs.push("-m", message);
     await executeCommand("git", commitArgs);
     await executeCommand("git", ["push", "--no-verify", "origin", branch]);
