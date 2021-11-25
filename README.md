@@ -13,4 +13,5 @@ npm install -D @abdulghani/release-tag
 release-tag 
     --type=[major|minor|patch] 
     --stage=[stage|rc|release]
+    --write-to-pacakge
 ```
