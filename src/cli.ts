@@ -7,6 +7,6 @@ import GitTags from "@package/utils/git-tags";
     const instance = new GitTags();
     await instance.createRelease();
   } catch (err: any) {
-    console.log("FAILED", err.message);
+    console.log("FAILED", err.message ?? err);
   }
 })();
