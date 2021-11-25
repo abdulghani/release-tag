@@ -1,7 +1,8 @@
 {
   "name": "@abdulghani/release-tag",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "package to manage release tag for a repository in a cli",
+  "homepage": "https://github.com/abdulghani/release-tag",
   "bin": {
     "release-tag": "./build/cli.js"
   },
