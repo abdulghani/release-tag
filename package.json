@@ -1,13 +1,12 @@
 {
   "name": "@abdulghani/release-tag",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "package to manage release tag for a repository in a cli",
   "homepage": "https://github.com/abdulghani/release-tag",
   "bin": {
     "release-tag": "./build/cli.js"
   },
   "scripts": {
-    "prepublish": "npm run build",
     "build": "[ -d ./build ] && rm -rf ./build; npm run test && ttsc --project ./tsconfig.build.json",
     "test": "jest --config ./jest.config.ts --verbose --runInBand --coverage",
     "test:file": "npm run test -- --watch",
