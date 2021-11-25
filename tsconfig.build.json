@@ -1,4 +1,11 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "transform": "typescript-transform-paths"
+      }
+    ]
+  },
   "exclude": ["./**/*.test.ts", "./**/*.int.test.ts", "./**/*.test.int.ts"]
 }

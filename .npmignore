@@ -1,6 +1,7 @@
 /src/
 /.coverage/
 /tsconfig.json
+/tsconfig.build.json
 /.gitignore
 /jest.config.ts
 /package-lock.json

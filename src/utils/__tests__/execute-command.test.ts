@@ -11,9 +11,7 @@ describe("test execute command", () => {
   it("throws failed command", async () => {
     const res = await executeCommand("node", [
       "console.log('hello world')",
-    ]).catch((err) => {
-      return "thrown_error";
-    });
+    ]).catch((err) => "thrown_error");
 
     expect(res).toBe("thrown_error");
   });
